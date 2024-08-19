@@ -39,6 +39,7 @@ CVI_PG <- function(N, D, T0, s1, s2,A0, B0, X, W1, W2, A, B, Plog, maxit){
     #different updates for i = 1, i = {2, ..., T0-1} and i = T0
     P230 <- X %*% t(digamma(A) - log(B))
     P231 <- rowSums(A/B)
+    P232 <- lfactorial(X)
     for (n in 1:N){
       #update of the n^th vector is done by considering all the vecors except
       #the n^th one
@@ -62,7 +63,7 @@ CVI_PG <- function(N, D, T0, s1, s2,A0, B0, X, W1, W2, A, B, Plog, maxit){
       # for (i in 1:T0){
       #   P231[i] <- -0.5*L21[i,, drop=FALSE] %*% t(L21[i,, drop=FALSE])
       # }
-      P2 <- P20 + P22 + P230[n, ] - P231
+      P2 <- P20 + P22 + P230[n,] - P231 - P232[n,]
       #log-sum-exp trick
       p0 <- max(P2)
       Plog[n,] <- P2 - p0 - log(sum(exp(P2 - p0)))
